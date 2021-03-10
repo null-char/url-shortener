@@ -24,10 +24,19 @@ logger.timestamp = false;
         await copy("./vercel.json", "./dist/vercel.json");
         // Copy back-end files
         await exec("tsc --build tsconfig.prod.json", "./");
+        await move("./dist/src", "./dist/api");
     } catch (err) {
         logger.err(err);
     }
 })();
+
+function move(src: string, dest: string): Promise<void> {
+    return new Promise((res, rej) => {
+        return fs.move(src, dest, (err) => {
+            return !!err ? rej(err) : res();
+        });
+    });
+}
 
 function remove(loc: string): Promise<void> {
     return new Promise((res, rej) => {
