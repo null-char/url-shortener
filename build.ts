@@ -15,16 +15,16 @@ logger.timestamp = false;
         await remove("./dist/");
         // Copy front-end files
         await copy("./src/public", "./dist/public");
-        // Copy production env file
-        await copy(
-            "./src/pre-start/env/production.env",
-            "./dist/pre-start/env/production.env"
-        );
+        // // Copy production env file
+        // await copy(
+        //     "./src/pre-start/env/production.env",
+        //     "./dist/pre-start/env/production.env"
+        // );
         // Copy vercel config
         await copy("./vercel.json", "./dist/vercel.json");
         // Copy back-end files
         await exec("tsc --build tsconfig.prod.json", "./");
-        await move("./dist/src", "./dist/api");
+        await move("./dist/src/*", "./dist/");
     } catch (err) {
         logger.err(err);
     }
@@ -32,7 +32,13 @@ logger.timestamp = false;
 
 function move(src: string, dest: string): Promise<void> {
     return new Promise((res, rej) => {
-        return fs.move(src, dest, (err) => {
+        return childProcess.exec(`mv ${src} ${dest}`, (err, stdout, stderr) => {
+            if (!!stdout) {
+                logger.info(stdout);
+            }
+            if (!!stderr) {
+                logger.warn(stderr);
+            }
             return !!err ? rej(err) : res();
         });
     });
