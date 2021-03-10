@@ -18,6 +18,7 @@ import {
 } from "@mikro-orm/core";
 
 import { URL } from "./entities";
+import MikroORMConfig from "./mikro-orm.config";
 
 const app = express();
 
@@ -29,14 +30,12 @@ export const DI = {} as {
 
 (async () => {
     // Set up mikro orm
-    DI.orm = await MikroORM.init();
+    DI.orm = await MikroORM.init(MikroORMConfig);
     DI.em = DI.orm.em;
     DI.urlRepository = DI.em.getRepository(URL);
 
     // Set up a basic express server
     app.use(express.json());
-    // Serve files from public
-    app.use(express.static(path.join(__dirname, "./public")));
     app.use((req: Request, res: Response, next: NextFunction) =>
         RequestContext.create(DI.orm.em, next)
     );
@@ -46,6 +45,8 @@ export const DI = {} as {
     // Show routes called in console during development
     if (process.env.NODE_ENV === "development") {
         app.use(morgan("dev"));
+        // Serve files from public if on dev otherwise let vercel host our static files
+        app.use(express.static(path.join(__dirname, "./public")));
     }
 
     // Security

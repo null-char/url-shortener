@@ -20,9 +20,10 @@ logger.timestamp = false;
             "./src/pre-start/env/production.env",
             "./dist/pre-start/env/production.env"
         );
+        // Copy vercel config
+        await copy("./vercel.json", "./dist/vercel.json");
         // Copy back-end files
         await exec("tsc --build tsconfig.prod.json", "./");
-        await copy("./dist/src", "./dist");
     } catch (err) {
         logger.err(err);
     }

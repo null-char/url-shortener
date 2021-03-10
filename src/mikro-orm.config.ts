@@ -1,7 +1,8 @@
+import { Options } from "@mikro-orm/core";
 import { MongoHighlighter } from "@mikro-orm/mongo-highlighter";
-import { URL } from "./src/entities";
+import { URL } from "./entities";
 
-const options = {
+const options: Options = {
     type: "mongo",
     dbName: "url-shortener",
     highlighter: new MongoHighlighter(),
