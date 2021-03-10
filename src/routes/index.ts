@@ -1,4 +1,4 @@
-import { DI } from "@server";
+import { DI } from "../Server";
 import { Router, Request, Response } from "express";
 import { nanoid } from "nanoid";
 
