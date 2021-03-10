@@ -19,6 +19,7 @@ logger.timestamp = false;
         await exec("tsc --build tsconfig.prod.json", "./");
         await move("./dist/src/*", "./dist/");
         await copy("./src/pre-start/env", "./dist/pre-start/env");
+        await remove("./dist/src");
     } catch (err) {
         logger.err(err);
     }
