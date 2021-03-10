@@ -1,0 +1,3 @@
+src/public/
+build.ts
+mikro-orm.config.js
