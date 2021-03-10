@@ -6,8 +6,9 @@ const options: Options = {
     type: "mongo",
     dbName: "url-shortener",
     highlighter: new MongoHighlighter(),
-    debug: true,
+    debug: process.env.NODE_ENV === "development" ? true : false,
     entities: [URL],
+    clientUrl: process.env.MONGO_URI,
 };
 
 export default options;

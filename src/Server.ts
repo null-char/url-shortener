@@ -36,6 +36,7 @@ export const DI = {} as {
 
     // Set up a basic express server
     app.use(express.json());
+    app.use(express.static(path.join(__dirname, "./public")));
     app.use((req: Request, res: Response, next: NextFunction) =>
         RequestContext.create(DI.orm.em, next)
     );
@@ -45,8 +46,6 @@ export const DI = {} as {
     // Show routes called in console during development
     if (process.env.NODE_ENV === "development") {
         app.use(morgan("dev"));
-        // Serve files from public if on dev otherwise let vercel host our static files
-        app.use(express.static(path.join(__dirname, "./public")));
     }
 
     // Security
