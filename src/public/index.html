@@ -5,19 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="stylesheets/style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <title>Shorten your URLs!</title>
 </head>
 <body>
     <header>
-        <h1>Shorten your URLs below</h1>
+        <h1>shortrurls</h1>
     </header>
     
     <main id="app">
+       <div v-if="submitMessage" class="created-url">   
+            <p>{{submitMessage}}</p>
+       </div>
+
        <form @submit.prevent="onSubmit()">
-            <input v-model="url" name="url" id="url" autofocus type="text" />
-            <button type="submit">Submit</button>
+            <input v-model="url" name="url" id="url" autofocus type="text" required placeholder="enter a url" />
+            <input v-model="slug" name="slug" id="slug" type="text" placeholder="enter a slug (optional)" />
+            <button type="submit">create</button>
         </form>
-        <p v-if="submitMessage">{{submitMessage}}</p>
     </main>
     
     <script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
