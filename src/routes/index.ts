@@ -1,6 +1,7 @@
 import { DI } from "../Server";
 import { Router, Request, Response } from "express";
 import { nanoid } from "nanoid";
+import { URL } from "url";
 
 // Init router and path
 const router = Router();
@@ -15,12 +16,32 @@ router.post(
         req: Request<Record<string, unknown>, Record<string, unknown>, ReqBody>,
         res: Response
     ) => {
-        const url = req.body.url;
+        let url: string;
+        const bodyUrl = req.body.url;
+        // Format the urls correctly
+        if (!(bodyUrl.includes("http://") || bodyUrl.includes("https://"))) {
+            // Protocol is not specified here (assume only hostname provided) so we insert
+            // the hostname into a dummy url with an https protocol
+            const urlObj = new URL("https://./");
+            urlObj.hostname = bodyUrl;
+            url = urlObj.toString();
+        } else {
+            url = bodyUrl;
+        }
+
         let slug: string;
         // If a slug is provided in request body use that otherwise
         // generate a slug with nanoid
         if (req.body.slug) {
             slug = req.body.slug;
+            // Check to see if this slug is already associated to some URL
+            const existing = await DI.urlRepository.findOne({ slug });
+            if (existing) {
+                return res.status(400).json({
+                    message:
+                        "ERROR: This slug is already associated to some URL",
+                });
+            }
         } else {
             // 10 characters long. Collision probability shouldn't be that high
             // for our use case.
@@ -36,7 +57,7 @@ router.post(
 
         const host = req.get("host") || "host";
         res.status(200).json({
-            message: `Shortened URL: ${host}/${slug}`,
+            message: `${host}/${slug}`,
         });
     }
 );
