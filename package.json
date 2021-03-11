@@ -12,10 +12,7 @@
         "watch": [
             "src"
         ],
-        "ext": "ts, html, js",
-        "ignore": [
-            "src/public"
-        ],
+        "ext": "ts, html, js, css",
         "exec": "./node_modules/.bin/ts-node -r tsconfig-paths/register ./src"
     },
     "_moduleAliases": {
