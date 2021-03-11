@@ -36,6 +36,7 @@ export const DI = {} as {
 
     // Set up a basic express server
     app.use(express.json());
+    // Serve frontend files
     app.use(express.static(path.join(__dirname, "./public")));
     app.use((req: Request, res: Response, next: NextFunction) =>
         RequestContext.create(DI.orm.em, next)
